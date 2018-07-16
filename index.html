@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voximplant Web SDK Video example</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
+  <link href="index.css" rel="stylesheet">
+  <link href="index.css" rel="stylesheet">
+  <script src="https://cdn.voximplant.com/edge/voximplant.min.js"></script>
+  <script src="index.js"></script>
+</head>
+<body>
+  <h1>Voximplant Web SDK video demo</h1>
+  <p>This demo explains how to use videoFlags in Client.call and call.answer methods. It also shows how to work with local video and call.sendVideo method. HTTPS is required for demo to work properly because of browsers' security policy.</p>
+  <div class="demogrid">
+    <div class="demogrid__actions">
+      <div id="authBlock">
+        <h2>Login to Voximplant</h2>
+        <label for="login" class="input-block">
+          User name (i.e. user@app.company.voximplant.com)
+          <input type="text" id="login">
+        </label>
+        <label for="password"  class="input-block">
+          User password
+          <input type="password" id="password">
+        </label>
+        <button id="doLogin" class="button button_primary">Login</button>
+      </div>
+      <div id="callingBlock">
+        <h2>New outgoing call</h2>
+        <label for="login" class="input-block">
+          Number
+          <input type="text" id="number" >
+        </label>
+        <label for="enableSendVideoOnOffer" class="checkbox">Send Video
+          <input type="checkbox" id="enableSendVideoOnOffer"/>
+          <span class="checkmark"></span>
+        </label>
+        <button id="doCall" class="button button_primary">Call</button>
+        <br>
+        <br>
+        <button class="button js__showLocalVideo">Show local video</button>
+        <button class="button button_danger js__hideLocalVideo">Hide local video</button>
+      </div>
+      <div id="progressingBlock">
+        <h2>Calling...</h2>
+      </div>
+      <div id="answerBlock">
+        <h2>New incomming call</h2>
+        <label for="enableSendVideoOnAnswer" class="checkbox">Send Video
+          <input type="checkbox" id="enableSendVideoOnAnswer"/>
+          <span class="checkmark"></span>
+        </label>
+        <button id="answer" class="button button_primary">Answer call</button>
+        <button id="decline" class="button button_warning">Decline call</button>
+      </div>
+      <div id="inCallBlock">
+        <h2>Call is active</h2>
+        <button class="button js__showLocalVideo">Show local video</button>
+        <button class="button button_danger js__hideLocalVideo">Hide local video</button>
+        <br>
+        <br>
+        <button id="enableSendVideo" class="button">Enable sending video</button>
+        <button id="disableSendVideo" class="button button_danger">Disable sending video</button>
+        <br>
+        <br>
+        <button id="hangup" class="button button_warning">Hangup call</button>
+      </div>
+    </div>
+    <div id="vox_local_video" class="demogrid__lvideo">
+      <h3>Local video:</h3>
+    </div>
+    <div id="vox_remote_video" class="demogrid__rvideo">
+      <h3>Remote video:</h3>
+    </div>
+  </div>
+
+</body>
+</html>

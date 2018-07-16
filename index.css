@@ -1,0 +1,206 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #F7FAFE;
+}
+
+.button {
+    font-family: 'Roboto Mono', monospace;
+    text-transform: uppercase;
+    padding: 18px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 12px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #662EFF;
+    border-radius: 4px;
+    box-shadow: none;
+    color: #662EFF;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.button:hover {
+    border: 1px solid #662EFF;
+    color: #FFFFFF;
+    background-color: #662EFF;
+}
+
+.button:active {
+    background-color: #471FB5;
+    color: #FFFFFF;
+    border: 1px solid #471FB5;
+}
+
+.button_primary {
+    border: 1px solid #662EFF;
+    color: #FFFFFF;
+    background-color: #662EFF;
+}
+
+.button_primary:hover {
+    background: #fff;
+    border: 1px solid #662EFF;
+    color: #662EFF;
+
+}
+
+.button_primary:active {
+    background-color: #471FB5;
+    color: #FFFFFF;
+    border: 1px solid #471FB5;
+}
+
+.button_warning {
+    border: 1px solid #F5A623;
+    color: #FFFFFF;
+    background-color: #F5A623;
+}
+
+.button_warning:hover {
+    background-color: #FEFAF4;
+    border: 1px solid #F5A623;
+    color: #F5A623;
+
+}
+
+.button_warning:active {
+    background-color: #ED6F1F;
+    color: #FFFFFF;
+    border: 1px solid #ED6F1F;
+}
+
+.button_danger {
+    border: 1px solid #F56C6B;
+    color: #FFFFFF;
+    background-color: #F56C6B;
+}
+
+.button_danger:hover {
+    background-color: #FEF7F7;
+    border: 1px solid #F56C6B;
+    color: #F56C6B;
+
+}
+
+.button_danger:active {
+    background-color: #E23737;
+    color: #FFFFFF;
+    border: 1px solid #E23737;
+}
+
+.demogrid {
+    display: grid;
+    grid-template-areas: 'controls lvideo' 'controls rvideo';
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
+}
+
+.demogrid__actions {
+    grid-area: controls;
+}
+
+.demogrid__lvideo {
+    grid-area: lvideo;
+    background: #f0f0f0;
+    padding: 16px 32px;
+}
+
+.demogrid__rvideo {
+    grid-area: rvideo;
+    background: #f0f0f0;
+    padding: 16px 32px;
+}
+
+h3 {
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.input-block {
+    display: block;
+    padding-bottom: 32px;
+    color: #9BA9BB;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 12px;
+}
+
+.input-block input {
+    display: block;
+    margin-top: 16px;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 20px 24px;
+    color: #1C0B43;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 16px;
+    border: 1px solid #FFF;
+    transition: all 0.3s ease;
+
+}
+
+.input-block input:hover {
+    border: 1px solid #471FB5;
+}
+
+.input-block input:active {
+    border: 1px solid #662EFF;
+}
+
+.checkbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    padding-top: 6px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #9BA9BB;
+    font-size: 14px;
+    line-height: 14px;
+    margin-bottom: 22px;
+    transition: all 0.3s ease;
+}
+.checkbox:hover{
+    color: #662EFF;
+}
+
+.checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+.checkbox .checkmark {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    border: 2px solid #9BA9BB;
+    border-radius: 3px;
+    left: 0;
+    top:0;
+}
+
+.checkbox input:checked ~ .checkmark {
+    border: 2px solid #662EFF;
+    background-color: #662EFF;
+    background-image: url('checkmark_white.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
