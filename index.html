@@ -6,7 +6,12 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
   <link href="index.css" rel="stylesheet">
   <link href="index.css" rel="stylesheet">
-  <script src="https://cdn.voximplant.com/edge/voximplant.min.js"></script>
+<!--  <script src="voximplant.js"></script>-->
+   <script src="/voximplant-websdk/build/voximplant.js"></script>
+<!--   <script src="/dist/voximplant.js"></script>-->
+<!--  <script src="https://cdn.voximplant.com/edge/voximplant.min.js"></script>-->
+  <!--<script src="https://devcdn.voximplant.com/edge/voximplant.js"></script>-->
+  <script src="stats.js"></script>
   <script src="index.js"></script>
 </head>
 <body>
@@ -19,11 +24,11 @@
         <h2>Login to Voximplant</h2>
         <label for="login" class="input-block">
           User name (i.e. user@app.company.voximplant.com)
-          <input type="text" id="login">
+          <input type="text" id="login" value="">
         </label>
         <label for="password"  class="input-block">
           User password
-          <input type="password" id="password">
+          <input type="password" id="password" value="">
         </label>
         <button id="doLogin" class="button button_primary">Login</button>
       </div>
@@ -41,6 +46,12 @@
         <button id="doCall" class="button button_primary">Call</button>
         <br>
         <br>
+        <button id="doAudioCall" class="button button_primary">CallAudio</button>
+        <br>
+        <br>
+        <button id="doCallConference" class="button button_primary">Call Conference</button>
+        <br>
+        <br>
         <!--This buttons toggle local video preview-->
         <button class="button js__showLocalVideo">Show local video</button>
         <button class="button button_danger js__hideLocalVideo">Hide local video</button>
@@ -56,6 +67,8 @@
         </label>
         <!--This button answer call-->
         <button id="answer" class="button button_primary">Answer call</button>
+        <!--This button answer call-->
+        <button id="answerAudio" class="button button_primary">Answer audio call</button>
         <!--This button decline call-->
         <button id="decline" class="button button_warning">Decline call</button>
       </div>
@@ -69,6 +82,12 @@
         <!--This buttons toggle video sending-->
         <button id="enableSendVideo" class="button">Enable sending video</button>
         <button id="disableSendVideo" class="button button_danger">Disable sending video</button>
+        <button id="stopSendVideo" class="button button_danger">Stop sending video</button>
+        <br>
+        <br>
+        <!--This buttons hold call-->
+        <button id="unhold" class="button">Unhold</button>
+        <button id="hold" class="button button_danger">Hold</button>
         <br>
         <br>
         <!--This button hangup call-->

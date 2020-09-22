@@ -1,123 +1,227 @@
 const sdk = VoxImplant.getInstance();
 let currentCall;
-document.addEventListener('DOMContentLoaded',()=>{
+
+let callNumber;
+let login;
+let statReporter;
+
+document.addEventListener('DOMContentLoaded', () => {
+  initReporter();
   updateViewState();
   setLocalVideoBtn(false);
 
   // Add event listener for disable local video preview
   Array.from(document.querySelectorAll('.js__hideLocalVideo')).forEach(el => {
-    el.addEventListener('click',_=>{
+    el.addEventListener('click', _ => {
       sdk.showLocalVideo(false);
       setLocalVideoBtn(false);
-    },false)
+    }, false)
   });
   // Add event listener for enable local video preview
   Array.from(document.querySelectorAll('.js__showLocalVideo')).forEach(el => {
-    el.addEventListener('click',_=>{
+    el.addEventListener('click', _ => {
       sdk.showLocalVideo(true);
       setLocalVideoBtn(true);
-    },false)
+    }, false)
   });
 
   // Start sending video
-  document.querySelector('#enableSendVideo').addEventListener('click',()=>{
+  document.querySelector('#enableSendVideo').addEventListener('click', () => {
+    statReporter.sendVideo()
+
     currentCall.sendVideo(true);
     showSendVideoButtons(true);
-  },false);
+  }, false);
   // Stop sending video
-  document.querySelector('#disableSendVideo').addEventListener('click',()=>{
+  document.querySelector('#disableSendVideo').addEventListener('click', () => {
+    statReporter.stopSendVideo()
     currentCall.sendVideo(false);
     showSendVideoButtons(false);
-  },false);
+  }, false);
+  // Stop sending video
+  document.querySelector('#stopSendVideo').addEventListener('click', () => {
+    statReporter.stopSendVideo()
+    currentCall.sendVideo(false);
+    showSendVideoButtons(false);
+  }, false);
+
+  // Unhold call
+  document.querySelector('#unhold').addEventListener('click', () => {
+    statReporter.hold();
+    currentCall.setActive(true);
+    showHoldButtons(true);
+  }, false);
+  // Hold call
+  document.querySelector('#hold').addEventListener('click', () => {
+    statReporter.unHold();
+    currentCall.setActive(false);
+    showHoldButtons(false);
+  }, false);
+
 
   // Create new outgoing call
-  document.querySelector('#doCall').addEventListener('click',()=>{
+  document.querySelector('#doCall').addEventListener('click', () => {
     const sendVideo = document.querySelector('#enableSendVideoOnOffer').checked;
-    currentCall = sdk.call(document.querySelector('#number').value,{
-      sendVideo:sendVideo,
-      receiveVideo: true
+    currentCall = sdk.call({
+      number: document.querySelector('#number').value,
+      video: {
+        sendVideo: sendVideo,
+        receiveVideo: true
+      },
+      //H264first: true
     });
     showSendVideoButtons(sendVideo);
+    showHoldButtons(true);
     updateViewState('CALLING');
     bindCurrentCall();
-  },false);
+  }, false);
+
+  // Create new outgoing audio call
+  document.querySelector('#doAudioCall').addEventListener('click', () => {
+    const sendVideo = document.querySelector('#enableSendVideoOnOffer').checked;
+    currentCall = sdk.call(document.querySelector('#number').value, {
+      sendVideo: sendVideo,
+      receiveVideo: false
+    });
+    showSendVideoButtons(sendVideo);
+    showHoldButtons(true);
+    updateViewState('CALLING');
+    bindCurrentCall();
+  }, false);
+
+  // Create new outgoing conf call
+  document.querySelector('#doCallConference').addEventListener('click', () => {
+    const sendVideo = document.querySelector('#enableSendVideoOnOffer').checked;
+    callNumber = document.querySelector('#number').value
+    currentCall = sdk.callConference({
+      number: callNumber,
+      video: {
+        sendVideo: sendVideo,
+        receiveVideo: true
+      },
+      H264first: true
+    });
+    showSendVideoButtons(sendVideo);
+    showHoldButtons(true);
+    updateViewState('CALLING');
+    bindCurrentCall();
+  }, false);
 
   // Hangup current active call
-  document.querySelector('#hangup').addEventListener('click',()=>{
+  document.querySelector('#hangup').addEventListener('click', () => {
     currentCall.hangup();
     updateViewState('READY');
   });
   // Decline current incoming call
-  document.querySelector('#decline').addEventListener('click',()=>{
+  document.querySelector('#decline').addEventListener('click', () => {
     currentCall.decline();
     updateViewState('READY');
   });
   // Answer incoming call
-  document.querySelector('#answer').addEventListener('click',()=>{
+  document.querySelector('#answer').addEventListener('click', () => {
     const sendVideo = document.querySelector('#enableSendVideoOnAnswer').checked;
-    currentCall.answer('',{},{
-      sendVideo:sendVideo,
+    currentCall.answer('', {}, {
+      sendVideo: sendVideo,
       receiveVideo: true
     });
     showSendVideoButtons(sendVideo);
+    showHoldButtons(true);
+  });
+  // Answer incoming call audio only
+  document.querySelector('#answerAudio').addEventListener('click', () => {
+    const sendVideo = document.querySelector('#enableSendVideoOnAnswer').checked;
+    currentCall.answer('', {}, {
+      sendVideo: sendVideo,
+      receiveVideo: false
+    });
+    showSendVideoButtons(sendVideo);
+    showHoldButtons(true);
   });
 
   // Login to the voximplant cloud
-  document.querySelector('#doLogin').addEventListener('click',()=>{
+  document.querySelector('#doLogin').addEventListener('click', () => {
     document.querySelector('#doLogin').style.display = 'none';
-    sdk.init({showDebugInfo:true,localVideoContainerId:"vox_local_video",remoteVideoContainerId:"vox_remote_video"})
-      .then(()=>sdk.connect(false))
-      .then(()=>sdk.login(document.querySelector('#login').value,document.querySelector('#password').value))
-      .then(()=>{
+    sdk.init({
+      showDebugInfo: true,
+      // prettyPrint: true,
+      localVideoContainerId: "vox_local_video",
+      remoteVideoContainerId: "vox_remote_video",
+      rtcStatsCollectionInterval: "2000",
+      // H264first:true,
+      // serverIp:'dev146.voximplant.internal:4443'
+      // serverIp:'dev146.voximplant.internal:4443'
+      // serverIp:'dev165.voximplant.internal:4443'
+    })
+      .then(() => sdk.connect())
+      .then(() => {
+        login = document.querySelector('#login').value;
+        sdk.login(login, document.querySelector('#password').value);
+      })
+      .then(() => {
+        VoxImplant.Hardware.AudioDeviceManager.get().setDefaultAudioSettings({
+          advanced: [{googEchoCancellation: {exact: true}}, {googExperimentalEchoCancellation: {exact: true}}, {autoGainControl: {exact: true}}, {noiseSuppression: {exact: true}}, {googHighpassFilter: {exact: true}}, {googAudioMirroring: {exact: true}}]
+        });
         updateViewState('READY');
         // Setup listener on new Incoming call
-        sdk.on(VoxImplant.Events.IncomingCall,(e)=>{
+        sdk.on(VoxImplant.Events.PlaybackError, onStatPlaybackError)
+        sdk.on(VoxImplant.Events.IncomingCall, (e) => {
           currentCall = e.call;
           updateViewState('INCOMING');
           bindCurrentCall();
         })
       })
-      .catch(e=>{
+      .catch(e => {
         document.querySelector('#doLogin').style.display = 'inline';
-        alert(e.code||e.name);
+        alert(e.code || e.name);
+        console.error(e);
         sdk.disconnect();
       })
   })
-},false);
+}, false);
+
+
 
 function setLocalVideoBtn(flag) {
   Array.from(document.querySelectorAll('.js__hideLocalVideo')).forEach(el => {
-    el.style.display = flag?'inline':'none'
+    el.style.display = flag ? 'inline' : 'none'
   });
   Array.from(document.querySelectorAll('.js__showLocalVideo')).forEach(el => {
-    el.style.display = flag?'none':'inline'
+    el.style.display = flag ? 'none' : 'inline'
   });
 }
 
 // Bind event to the current call
 function bindCurrentCall() {
-  currentCall.on(VoxImplant.CallEvents.Failed,(e)=>{
-    alert(e.reason||e.name);
+  statReporter = callReporter(currentCall,login,callNumber);
+  currentCall.on(VoxImplant.CallEvents.Failed, (e) => {
+    alert(e.reason || e.name);
     updateViewState('READY');
     currentCall = null;
   });
-  currentCall.on(VoxImplant.CallEvents.Disconnected,(e)=>{
+  currentCall.on(VoxImplant.CallEvents.Disconnected, (e) => {
+    pendingEvents = [];
     updateViewState('READY');
     currentCall = null;
   });
-  currentCall.on(VoxImplant.CallEvents.Connected,(e)=>{
+  currentCall.on(VoxImplant.CallEvents.Connected, (e) => {
     updateViewState('INCALL');
   });
 }
 
 function showSendVideoButtons(flag) {
-  document.querySelector('#enableSendVideo').style.display = flag?'none':'inline';
-  document.querySelector('#disableSendVideo').style.display = flag?'inline':'none';
+  document.querySelector('#enableSendVideo').style.display = flag ? 'none' : 'inline';
+  document.querySelector('#disableSendVideo').style.display = flag ? 'inline' : 'none';
+  document.querySelector('#stopSendVideo').style.display = flag ? 'none' : 'inline';
+}
+
+function showHoldButtons(flag) {
+  document.querySelector('#unhold').style.display = flag ? 'none' : 'inline';
+  document.querySelector('#hold').style.display = flag ? 'inline' : 'none';
 }
 
 // This function change view state.
-function updateViewState(state){
-  switch (state){
+function updateViewState(state) {
+  switch (state) {
     case 'READY':
       document.querySelector('#callingBlock').style.display = 'block';
       document.querySelector('#authBlock').style.display = 'none';
